@@ -1,3 +1,4 @@
+```tsx
 "use client";
 
 import { useState } from "react";
@@ -33,12 +34,15 @@ export default function Apply() {
     setError("");
 
     try {
-      const response = await fetch("/api/apply", {
+      const response = await fetch("/api/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          type: "application",
+        }),
       });
 
       const data = await response.json();
@@ -57,6 +61,7 @@ export default function Apply() {
       });
     } catch (error) {
       console.error(error);
+
       setError(
         error instanceof Error
           ? error.message
@@ -189,3 +194,4 @@ export default function Apply() {
     </main>
   );
 }
+```
