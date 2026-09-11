@@ -17,7 +17,7 @@ export default function Contact() {
     try {
       const subject = encodeURIComponent(`${form.inquiry} — ${form.company || form.name}`);
       const body = encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\nCompany / Startup: ${form.company}\n\n${form.message}`);
-      window.location.href = `mailto:prabidhi.uthaan@gmail.com?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:infopeubi@gmail.com?subject=${subject}&body=${body}`;
       window.setTimeout(() => setState("success"), 450);
     } catch { setState("error"); }
   };
