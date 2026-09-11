@@ -33,7 +33,7 @@ export default function Apply() {
     setError("");
 
     try {
-      const response = await fetch("/api/send", {
+      const response = await fetch("/api/apply", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export default function Apply() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Something went wrong.");
+        throw new Error(data.error || "Failed to submit application.");
       }
 
       setSent(true);
@@ -55,11 +55,12 @@ export default function Apply() {
         idea: "",
         stage: "",
       });
-    } catch (err) {
-      console.error(err);
-
+    } catch (error) {
+      console.error(error);
       setError(
-        "We couldn't submit your application. Please try again."
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
       );
     } finally {
       setLoading(false);
@@ -80,8 +81,8 @@ export default function Apply() {
       </h1>
 
       <p className="lead">
-        No polished pitch deck required. Give us enough context to
-        understand the problem, your insight, and what you want to make real.
+        No polished pitch deck required. Give us enough context to understand
+        the problem, your insight, and what you want to make real.
       </p>
 
       {sent ? (
@@ -91,16 +92,13 @@ export default function Apply() {
           <h2>Application received.</h2>
 
           <p>
-            Thanks for sharing your idea. Our team will review your
-            submission and get back to you.
+            Thank you for reaching out. Your application has been sent to the
+            Prabidhi Uthaan team. We will review your idea and get back to you.
           </p>
 
           <button
             className="button"
-            onClick={() => {
-              setSent(false);
-              setError("");
-            }}
+            onClick={() => setSent(false)}
           >
             Submit another
           </button>
@@ -154,15 +152,21 @@ export default function Apply() {
               onChange={update}
             >
               <option value="">Choose a stage</option>
-              <option value="Just an idea">Just an idea</option>
-              <option value="Prototype / MVP">Prototype / MVP</option>
-              <option value="Early revenue">Early revenue</option>
-              <option value="Growing venture">Growing venture</option>
+              <option>Just an idea</option>
+              <option>Prototype / MVP</option>
+              <option>Early revenue</option>
+              <option>Growing venture</option>
             </select>
           </label>
 
           {error && (
-            <p className="form-error">
+            <p
+              style={{
+                color: "#a33",
+                margin: 0,
+                fontSize: "14px",
+              }}
+            >
               {error}
             </p>
           )}
@@ -171,15 +175,14 @@ export default function Apply() {
             className="button"
             type="submit"
             disabled={loading}
+            style={{
+              opacity: loading ? 0.6 : 1,
+              cursor: loading ? "not-allowed" : "pointer",
+            }}
           >
-            {loading ? (
-              "Sending..."
-            ) : (
-              <>
-                Send application
-                <ArrowUpRight size={18} />
-              </>
-            )}
+            {loading ? "Sending..." : "Send application"}
+
+            {!loading && <ArrowUpRight size={18} />}
           </button>
         </form>
       )}
