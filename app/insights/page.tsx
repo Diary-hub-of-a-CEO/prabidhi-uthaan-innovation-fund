@@ -1,0 +1,7 @@
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { Kicker } from "../../components/Section";
+import { ScrollReveal } from "../../components/Motion";
+import { articles } from "./articles";
+
+export default function Insights() { const [featured, ...rest] = articles; return <main className="insights-page"><section className="insights-hero"><Kicker>THE JOURNAL · NOTES FROM THE STUDIO</Kicker><h1>Ideas worth<br /><em>staying with.</em></h1><p>A considered view on founders, capital, innovation, and the work of building.</p></section><section className="featured-article section-shell"><div className="article-visual"><span>PU / 01</span><strong>FIELD<br />NOTES</strong></div><ScrollReveal><div className="article-meta"><span>{featured.category}</span><span>{featured.date}</span></div><h2>{featured.title}</h2><p>{featured.excerpt}</p><Link className="text-link" href={`/insights/${featured.slug}`}>Read article <ArrowUpRight size={16} /></Link></ScrollReveal></section><section className="article-list section-shell"><div className="section-inner"><Kicker>MORE FROM THE JOURNAL</Kicker>{rest.map((article, index) => <ScrollReveal key={article.slug} delay={index * 80}><Link className="article-row" href={`/insights/${article.slug}`}><span>0{index + 2}</span><div><small>{article.category} · {article.date}</small><h2>{article.title}</h2></div><ArrowUpRight size={20} /></Link></ScrollReveal>)}</div></section></main>; }

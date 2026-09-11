@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 260" role="img" aria-labelledby="title desc">
+  <title id="title">Prabidhi Uthaan</title>
+  <desc id="desc">Prabidhi Uthaan Entrepreneurship and Business Incubation</desc>
+  <g fill="none" stroke="#60482f" stroke-width="4">
+    <path d="M238 38v184" />
+    <path d="M258 224h84" />
+  </g>
+  <g fill="#17191b">
+    <path d="M42 42h83c55 0 88 27 88 68 0 25-14 46-39 58l-38-25c18-7 28-18 28-32 0-20-16-32-43-32H82v79l-40 29V42Z"/>
+    <path d="M82 158v55h52c25 0 44-12 44-35 0-18-14-29-38-29h-19l-39 9Z"/>
+    <path d="M72 150 112 111l23 22 27-22 28 31-28 26-28-25-18 20-18-17-26 25Z"/>
+    <path d="M80 164c-9 22-7 42 3 58 8 12 20 21 34 25v-39c-11-10-20-25-24-44Z"/>
+  </g>
+  <circle cx="151" cy="82" r="11" fill="#8a6944"/>
+  <path d="M67 178c35-29 76-50 132-68-31 31-78 60-132 79-8 3-10-4 0-11Z" fill="#8a6944"/>
+  <path d="M118 214c-3-21 4-36 22-49 16 14 21 30 15 49-9 10-23 10-37 0Z" fill="#8a6944"/>
+  <g fill="#17191b" font-family="Georgia, 'Times New Roman', serif" font-weight="700">
+    <text x="278" y="112" font-size="78">Prabidhi</text>
+    <text x="278" y="184" font-size="78">Uthaan</text>
+  </g>
+  <g fill="#60482f" font-family="Arial, sans-serif" letter-spacing="5">
+    <text x="280" y="218" font-size="18">ENTREPRENEURSHIP &amp;</text>
+    <text x="280" y="242" font-size="18">BUSINESS INCUBATION</text>
+  </g>
+</svg>
