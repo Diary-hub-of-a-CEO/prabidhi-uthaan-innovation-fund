@@ -1,7 +1,5 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 function escapeHtml(value: string) {
   return value
     .replace(/&/g, "&amp;")
@@ -15,14 +13,14 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
 
+    const type = String(body.type || "application").trim();
+
     const name = String(body.name || "").trim();
     const email = String(body.email || "").trim();
-    const idea = String(body.idea || "").trim();
-    const stage = String(body.stage || "").trim();
 
-    if (!name || !email || !idea || !stage) {
+    if (!name || !email) {
       return Response.json(
-        { error: "All fields are required." },
+        { error: "Name and email are required." },
         { status: 400 }
       );
     }
@@ -36,22 +34,144 @@ export async function POST(request: Request) {
       );
     }
 
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    // CONTACT FORM
+    if (type === "contact") {
+      const company = String(body.company || "").trim();
+      const inquiry = String(body.inquiry || "").trim();
+      const message = String(body.message || "").trim();
+
+      if (!inquiry || !message) {
+        return Response.json(
+          { error: "Inquiry type and message are required." },
+          { status: 400 }
+        );
+      }
+
+      const { data, error } = await resend.emails.send({
+        from: "Prabidhi Uthaan <onboarding@resend.dev>",
+        to: ["infopuebi@gmail.com"],
+        replyTo: email,
+        subject: `${inquiry} — ${company || name}`,
+
+        html: `
+          <div style="
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #20221d;
+            max-width: 700px;
+            margin: 0 auto;
+          ">
+
+            <h2>New Prabidhi Uthaan Contact</h2>
+
+            <p>
+              <strong>Name:</strong>
+              ${escapeHtml(name)}
+            </p>
+
+            <p>
+              <strong>Email:</strong>
+              ${escapeHtml(email)}
+            </p>
+
+            <p>
+              <strong>Company / Startup:</strong>
+              ${escapeHtml(company || "Not provided")}
+            </p>
+
+            <p>
+              <strong>Inquiry Type:</strong>
+              ${escapeHtml(inquiry)}
+            </p>
+
+            <p style="margin-top: 28px;">
+              <strong>Message:</strong>
+            </p>
+
+            <div style="
+              background: #f4f1e9;
+              padding: 20px;
+              border-radius: 6px;
+              white-space: pre-wrap;
+            ">
+              ${escapeHtml(message)}
+            </div>
+
+            <hr style="margin: 30px 0;" />
+
+            <p style="font-size: 14px; color: #666;">
+              You can reply directly to this email to contact
+              ${escapeHtml(name)}.
+            </p>
+
+          </div>
+        `,
+      });
+
+      if (error) {
+        console.error("Resend contact error:", error);
+
+        return Response.json(
+          { error: "Failed to send contact message." },
+          { status: 500 }
+        );
+      }
+
+      return Response.json(
+        {
+          success: true,
+          id: data?.id,
+        },
+        { status: 200 }
+      );
+    }
+
+    // APPLICATION FORM
+    const idea = String(body.idea || "").trim();
+    const stage = String(body.stage || "").trim();
+
+    if (!idea || !stage) {
+      return Response.json(
+        { error: "All application fields are required." },
+        { status: 400 }
+      );
+    }
+
     const { data, error } = await resend.emails.send({
       from: "Prabidhi Uthaan <onboarding@resend.dev>",
       to: ["infopuebi@gmail.com"],
       replyTo: email,
       subject: `New Application from ${name}`,
+
       html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #20221d;">
+        <div style="
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #20221d;
+        ">
+
           <h2>New Prabidhi Uthaan Application</h2>
 
-          <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+          <p>
+            <strong>Name:</strong>
+            ${escapeHtml(name)}
+          </p>
 
-          <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+          <p>
+            <strong>Email:</strong>
+            ${escapeHtml(email)}
+          </p>
 
-          <p><strong>Current Stage:</strong> ${escapeHtml(stage)}</p>
+          <p>
+            <strong>Current Stage:</strong>
+            ${escapeHtml(stage)}
+          </p>
 
-          <p><strong>What are they building?</strong></p>
+          <p>
+            <strong>What are they building?</strong>
+          </p>
 
           <div style="
             background: #f4f1e9;
@@ -65,14 +185,16 @@ export async function POST(request: Request) {
           <hr style="margin: 30px 0;" />
 
           <p>
-            You can reply directly to this email to contact ${escapeHtml(name)}.
+            You can reply directly to this email to contact
+            ${escapeHtml(name)}.
           </p>
+
         </div>
       `,
     });
 
     if (error) {
-      console.error("Resend error:", error);
+      console.error("Resend application error:", error);
 
       return Response.json(
         { error: "Failed to send application." },
@@ -81,11 +203,14 @@ export async function POST(request: Request) {
     }
 
     return Response.json(
-      { success: true, id: data?.id },
+      {
+        success: true,
+        id: data?.id,
+      },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Application API error:", error);
+    console.error("Send API error:", error);
 
     return Response.json(
       { error: "Something went wrong." },
