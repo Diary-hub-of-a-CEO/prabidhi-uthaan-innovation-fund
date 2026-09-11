@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     }
 
     if (!process.env.RESEND_API_KEY) {
-      console.error("RESEND_API_KEY is not configured.");
+      console.error("RESEND_API_KEY is missing");
 
       return Response.json(
         { error: "Email service is not configured." },
@@ -26,60 +26,43 @@ export async function POST(request: Request) {
       from: "Prabidhi Uthaan <onboarding@resend.dev>",
       to: ["prabidhiuthaan.org@gmail.com"],
       replyTo: email,
-      subject: `New Pitch from ${name}`,
+      subject: `New Pitch Submission — ${name}`,
       html: `
-        <div style="font-family: Arial, Helvetica, sans-serif; max-width: 650px; margin: 0 auto; padding: 30px; color: #222;">
-          <h1>New Pitch Submission</h1>
+        <h2>New Prabidhi Uthaan Pitch</h2>
 
-          <p>
-            A new idea has been submitted through the Prabidhi Uthaan website.
-          </p>
+        <p><strong>Name:</strong> ${name}</p>
 
-          <hr style="margin: 25px 0;" />
+        <p><strong>Email:</strong> ${email}</p>
 
-          <p>
-            <strong>Name:</strong><br />
-            ${name}
-          </p>
+        <p><strong>Current Stage:</strong> ${stage}</p>
 
-          <p>
-            <strong>Email:</strong><br />
-            ${email}
-          </p>
+        <hr />
 
-          <p>
-            <strong>What are they building?</strong><br />
-            ${idea}
-          </p>
-
-          <p>
-            <strong>Current stage:</strong><br />
-            ${stage}
-          </p>
-        </div>
+        <h3>Idea</h3>
+        <p>${idea}</p>
       `,
     });
 
     if (error) {
-      console.error("Resend error:", error);
+      console.error("RESEND ERROR:", error);
 
       return Response.json(
-        { error: "Failed to send the application." },
+        { error: error.message || "Failed to send email." },
         { status: 500 }
       );
     }
 
+    console.log("EMAIL SENT:", data);
+
     return Response.json({
       success: true,
-      data,
+      message: "Application received.",
     });
   } catch (error) {
-    console.error("API error:", error);
+    console.error("API ERROR:", error);
 
     return Response.json(
-      {
-        error: "Something went wrong while submitting the application.",
-      },
+      { error: "Something went wrong while submitting." },
       { status: 500 }
     );
   }
