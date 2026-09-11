@@ -2,7 +2,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const result = await resend.emails.send({
   from: "Prabidhi Uthaan <onboarding@resend.dev>",
-  to: ["prabidhiuthaan.org@gmail.com"],
+  to: ["to: ["skapplies@gmail.com"],"],
   replyTo: email,
   subject: `New Pitch Submission — ${name}`,
   html: `
