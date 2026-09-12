@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -104,6 +103,7 @@ export default function Apply() {
           <button
             className="button"
             onClick={() => setSent(false)}
+            type="button"
           >
             Submit another
           </button>
@@ -194,4 +194,3 @@ export default function Apply() {
     </main>
   );
 }
-```
